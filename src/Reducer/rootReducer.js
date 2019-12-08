@@ -20,7 +20,9 @@ const initState = {
             title: "Je suis le quatrième article",
             body: "Voici le contenu, mdre"
         }
-    ]
+    ],
+
+    IsConnected: false
 }
 
 const rootReducer = (state = initState, action) => {

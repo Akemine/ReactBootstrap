@@ -1,74 +1,64 @@
-import React from 'react';
-//import { Button, Form } from 'react-bootstrap';
+import React from 'react'
+import { Button, Form } from 'react-bootstrap'
+import { connect } from 'react-redux'
 
-//let username = "IciCParis";
+let username = "IciCParis";
 let token = "";
 let email = "dav@gmail.com";
 let password = "david";
 let address =""
 let userData = ""
 let user = ""
-//let index = 1;
+let index = 1
+let isConnected = false
+let IsConnected = isConnected
 
-let username = ""
-let name = "myFirstContract"
-let description = "Les poneys sont généreux"
-let endDate = "12/12/2012"
-let userId = "0"
 
 
 function LoginButton(props) {
   return (
-    <button onClick={props.onClick}>
+    <Button onClick={props.onClick}>
       Connexion
-    </button>
+    </Button>
   );
 }
 
 function LogoutButton(props) {
   return (
-    <button onClick={props.onClick}>
+    <Button onClick={props.onClick}>
       Déconnexion
-    </button>
+    </Button>
   );
 }
 
-function CreateContract(props) {
-  return (
-    <button onClick={props.onClick}>
-      Créer un contrat
-    </button>
-  );
-}
 
 class LoginForm extends React.Component {
   
   constructor(props) {
     super(props);
-    this.state = {value: ''};
-    this.handleChange = this.handleChange.bind(this);
+    
+    this.handleEmail = this.handleEmail.bind(this);
+    this.handlePassword = this.handlePassword.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {isConnected: false};
+    this.state =
+    {data: [{isConnected: false}, {email: ''}, {password: ''}] }
   }
 
-  state = {
-    isConnected: false,
+  handleEmail = (event) => {
+    this.setState({email: event.target.value})
   }
 
-  handleChange(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-    this.setState({
-      [name]: value
-    });
+  handlePassword = (event) => {
+    this.setState({password: event.target.value})
   }
+
+
   handleSubmit = (event) => {
     fetch('http://localhost:5000/auth/login', {
     method: "POST",
     body: JSON.stringify({
-      "email" : email,
-      "password": password
+      "email" : this.state.email,
+      "password": this.state.password
     }),
     headers: {
       "Content-Type": "application/json",
@@ -93,120 +83,59 @@ class LoginForm extends React.Component {
   event.preventDefault();
 }
 
-handleDeco = (event) => {
-  
-  console.log("Deconnexion.");
-  fetch('http://localhost:5000/auth/logout', {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Accept-Encoding": "gzip , deflate, br",
-    "sec-fetch-mode": "no-cors",
-    "Authorization": "Bearer " + token,
-    "Access-Control-Request-Headers": "content-type",
-    "Access-Control-Request-Method": "POST",
-    "Access-Control-Allow-Origin": "*"
-  }
-})
-  this.setState({isConnected: false})
-  console.log(this.state)
-event.preventDefault();
+componentWillUnmount(){
+  this.props.LogInOff(this.props.IsConnected.isConnected)
 }
 
-createContract = () => {
-  let proposals = [{address: address, name: "Dumdum"}, {address: address, name: "DoumDoum"}]
-  fetch('http://localhost:5000/contracts/create', {
-  method: "POST",
-  body: JSON.stringify({
-    "name": name,
-    "description": description,
-    "end_date": endDate,
-    "user": userData,
-    "proposals": proposals
-  }),
-  headers: {
-    "Content-Type": "application/json",
-    "Accept-Encoding": "gzip , deflate, br",
-    "sec-fetch-mode": "no-cors",
-    "Authorization": "Bearer " + token,
-    "Access-Control-Request-Headers": "content-type",
-    "Access-Control-Request-Method": "POST",
-    "Access-Control-Allow-Origin": "*"
-  }
 
-})
-  .then(response => response.json())
+  render(){
+    const {IsConnected} = this.props; // info du magasin
+    isConnected = this.state.isConnected;
+    let button;
 
-    address = userData.address
-    email = userData.email
-    username = userData.username
-    console.log("mail de l'user : " + email)
-    console.log("username de l'user : " + username)
-    console.log("token de l'user " + token)
-    console.log(name)
-    console.log(description)
-    console.log(endDate)
-    console.log(address)
-    console.table(proposals)
-    console.log("Vous avez créé un contract.")
-  console.log()
-}
-
-render(){
-  const isConnected = this.state.isConnected;
-  let button;
-  let contract;
-
-  if (isConnected) {
-    button = <LogoutButton onClick={this.handleDeco} />;
-    contract = <CreateContract onClick={this.createContract}/>
-    
-  } else {
     button = <LoginButton onClick={this.handleSubmit} />;
-  }
-  return (
-    <div>
-      {button}
-      {contract}
-    </div>
-  );
-}
-  
-  // return (
-  //   {isConnected?
-  //   (
-  //     <div className="container">
-  //     <Form onSubmit={this.handleSubmit}>
-  //     <Form.Group>
-  //     <Form.Label>Nom d'utilisateur </Form.Label>
-  //     <Form.Control placeholder="Entrer votre nom d'utilisateur" />
-  //     </Form.Group>
-  //     <Form.Group controlId="formBasicEmail">
-  //     <Form.Label>Adresse Email</Form.Label>
-  //     <Form.Control type="email" placeholder="Entrer votre adresse Email" />
-  //     <Form.Text className="text-muted">
-  //     Ne partagez jamais votre adresse Email !
-  //     </Form.Text>
-  //     </Form.Group>
-  //     <Form.Group controlId="formBasicPassword">
-  //     <Form.Label>Mot de passe</Form.Label>
-  //     <Form.Control type="password" placeholder="Entrer votre mot de passe" />
-  //     </Form.Group>
-  //     <Button variant="primary" type="submit">
-  //     Se connecter
-  //     </Button>
-  //     </Form>
-  //     </div> 
-  //     :
-  //     <div>
-  //     <Form onSubmit={this.handleDeco}>
-  //     <Button variant="primary" type="submit">
-  //     Se déconnecter
-  //     </Button>
-  //     </Form>
-  //     </div>
-  //   )
-  // }
+    if (isConnected) {
+      this.props.history.push("/")
+      
+    } else {
+      console.log(IsConnected)
+    }
+   return (
+
+       <div className="container">
+       <Form>
+       <Form.Group controlId="formBasicEmail">
+       <Form.Label>Adresse Email</Form.Label>
+       <Form.Control type="email" placeholder="Entrer votre adresse Email" value={this.state.value} onChange={this.handleEmail}/>
+       <Form.Text className="text-muted">
+       Ne partagez jamais votre adresse Email !
+       </Form.Text>
+       </Form.Group>
+       <Form.Group controlId="formBasicPassword">
+       <Form.Label>Mot de passe</Form.Label>
+       <Form.Control type="password" placeholder="Entrer votre mot de passe" value={this.state.password} onChange={this.handlePassword}/>
+       </Form.Group>
+       {button}
+       </Form>
+       
+        </div>
+     )
+   }
 }
 
-export default LoginForm;
+const mapStateToProps = state => {
+  return {
+      IsConnected: isConnected
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    LogInOff : isConnected => {
+      dispatch({
+        type: "SAY_OK", IsConnected: isConnected
+      })
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);

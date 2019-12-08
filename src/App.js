@@ -7,9 +7,11 @@ import LoginForm from '.\\Components/LoginForm.js';
 import Users from '.\\Components/Users.js';
 import NewUser from '.\\Components/NewUser.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CreateAccountForm from '.\\Components/CreateAccountForm.js';
 
 
 function App() {
+  
   return (
     <BrowserRouter>
     <div className="App">
@@ -17,6 +19,7 @@ function App() {
     <Route exact path="/" component={Home}/>
     <Route path="/Votes" component={Votes}/>
     <Route path="/LoginForm" exact component={LoginForm}/>
+    <Route path="/CreateAccountForm" component={CreateAccountForm}/>
     <Route path="/Users" component={Users}/>
     <Route path="/NewUser" component={NewUser}/>
     </div>

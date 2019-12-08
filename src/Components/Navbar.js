@@ -1,9 +1,14 @@
 import React from 'react';
 import { Form, Navbar, Button, Nav, NavDropdown } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
+import CompoTestApi from '.\\CompoTestApi.js'
+import { connect } from 'react-redux'
 
-const MaNav = (props) => {
-    console.log(props)
+class MaNav extends React.Component {
+
+    render(){
+        const {IsConnected} = this.props; // info du magasin
+        console.log(IsConnected)
     return( 
     <Navbar bg="light" expand="lg">
     <Navbar.Brand href=" /">React-Bootstrap</Navbar.Brand>
@@ -17,11 +22,20 @@ const MaNav = (props) => {
         </NavDropdown>
         </Nav>
         <Form inline>
-        <Nav.Link href=" /LoginForm"><Button>S'inscrire</Button></Nav.Link>
+        <Nav.Link href=" /CompoTestApi"><CompoTestApi /></Nav.Link>
+        <Nav.Link href=" /LoginForm"><Button>Déjà inscrit</Button></Nav.Link>
+        <Nav.Link href=" /CreateAccountForm"><Button>S'inscrire</Button></Nav.Link>
         </Form>
     </Navbar.Collapse>
     </Navbar>
-    );
-};
+    )
+}
+}
 
-export default withRouter(MaNav);;
+const mapStateToProps = state => {
+    return {
+        IsConnected: state.IsConnected
+    }
+  }
+
+export default connect(mapStateToProps)(withRouter(MaNav));
